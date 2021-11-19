@@ -3,14 +3,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
-    private int numberOfPlayers;
     private final List<Player> gamePlayers;
     private DeckOfCards deckOfCards;
     boolean isStartOfGame = true;
 
-    public Game(int numberOfPlayers) {
-        this.gamePlayers = new ArrayList<>();
-        this.numberOfPlayers = numberOfPlayers;
+    public Game(List<Player> gamePlayers) {
+        this.gamePlayers = gamePlayers;
 
         initGame();
         playGame();
@@ -19,17 +17,13 @@ public class Game {
     public void initGame() {
         deckOfCards = new DeckOfCards();
         deckOfCards.shuffleCards();
-
-        for (int i = 1; i <= this.numberOfPlayers; i++) {
-            this.gamePlayers.add(new Player("Player "+i));
-        }
     }
 
     public void playGame() {
         int currentRound = 1;
         do {
             logRound(currentRound);
-            gamePlayers.stream().filter(player -> player.getPlayerScore() < 17).forEach(player -> this.deckOfCards.dealCards(player, isStartOfGame ? 2 : 1));
+            gamePlayers.stream().filter(player -> player.getPlayerStrategyChoice()).forEach(player -> this.deckOfCards.dealCards(player, isStartOfGame ? 2 : 1));
             isStartOfGame = false;
             checkGameStatus();
             currentRound+=1;
