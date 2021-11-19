@@ -13,6 +13,7 @@ public class Game {
         this.numberOfPlayers = numberOfPlayers;
 
         initGame();
+        playGame();
     }
 
     public void initGame() {
@@ -20,17 +21,24 @@ public class Game {
         deckOfCards.shuffleCards();
 
         for (int i = 1; i <= this.numberOfPlayers; i++) {
-            this.gamePlayers.add(new Player(i));
+            this.gamePlayers.add(new Player("Player "+i));
         }
     }
 
     public void playGame() {
+        int currentRound = 1;
         do {
+            logRound(currentRound);
             gamePlayers.stream().filter(player -> player.getPlayerScore() < 17).forEach(player -> this.deckOfCards.dealCards(player, isStartOfGame ? 2 : 1));
             isStartOfGame = false;
             checkGameStatus();
+            currentRound+=1;
         } while (!isGameEnd());
-        getWinner();
+        System.out.println("\nThe winner is: " + getWinner());
+    }
+
+    public void logRound(int currentRound) {
+        System.out.println("\nRound " + currentRound + "\n");
     }
 
     public void checkGameStatus() {
@@ -43,26 +51,20 @@ public class Game {
         if (stuckPlayers.size() == gamePlayers.size()) return true;
 
         List<Player> exactly21Players = this.gamePlayers.stream().filter(player -> player.getPlayerScore() == 21).collect(Collectors.toList());
-        if (exactly21Players.size() > 0) {
-            // TO-DO
-            // Calculate game winner (must be player with highest score but below 21)
-            getWinner();
-            return true;
-        }
+        if (exactly21Players.size() > 0) return true;
 
         if (gamePlayers.size() == 1) return true;
 
         return false;
     }
 
-    public int getWinner() {
+    public String getWinner() {
         if (gamePlayers.size() == 1) return gamePlayers.get(0).getPlayerId();
 
-        int maximumScore = gamePlayers.stream().filter(player -> player.getPlayerScore() < 21).mapToInt(player -> player.getPlayerScore()).max().orElse(-2);
-        if (maximumScore == -2) return -2;
-        else if (maximumScore != -2)
-            return gamePlayers.stream().filter(player -> player.getPlayerScore() == maximumScore).findFirst().orElse(null).getPlayerId();
+        List<Player> possibleWinners = gamePlayers.stream().filter(player -> player.getPlayerScore() == 21).collect(Collectors.toList());
+        if (possibleWinners.size() > 0) return possibleWinners.stream().findFirst().orElse(null).getPlayerId();
 
-        return -1;
+        int max = gamePlayers.stream().mapToInt(Player::getPlayerScore).max().orElse(0);
+        return gamePlayers.stream().filter(player -> player.getPlayerScore() == max).findFirst().orElse(null).getPlayerId();
     }
 }
