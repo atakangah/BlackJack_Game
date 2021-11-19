@@ -3,10 +3,12 @@ import java.util.List;
 
 public class Player {
     private String playerId;
+    private Strategy playerStrategy;
     private final List<Card> playerCards;
 
-    public Player(String playerId) {
+    public Player(String playerId, Strategy playerStrategy) {
         this.playerId = playerId;
+        this.playerStrategy = playerStrategy;
         this.playerCards = new ArrayList<>();
     }
 
@@ -26,7 +28,7 @@ public class Player {
         return playerCards.stream().mapToInt(Card::getValue).sum();
     }
 
-    public boolean isWinner() {
-        return false;
+    public boolean getPlayerStrategyChoice() {
+        return this.playerStrategy.getStrategyChoice(this);
     }
 }

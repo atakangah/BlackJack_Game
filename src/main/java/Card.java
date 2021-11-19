@@ -17,7 +17,8 @@ public class Card{
         this.cardType = cardType;
     }
 
-    public int getValue() {
+
+   public int getValue() {
         return value;
     }
 
