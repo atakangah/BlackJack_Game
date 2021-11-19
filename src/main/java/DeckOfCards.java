@@ -36,7 +36,12 @@ public class DeckOfCards {
             Card card = deckOfCards.get(0);
             player.acceptDeal(card);
             removeDealtCard();
+            logDealtCard(player, card, i==numberOfCards-1);
         }
+    }
+
+    private void logDealtCard(Player player, Card card, boolean shouldPrintNewLine)  {
+        System.out.println(player.getPlayerId() + " dealt " + card.getCardName() + ". Player Score: " + player.getPlayerScore() + (shouldPrintNewLine ? "\n" : ""));
     }
 
     private void removeDealtCard() {

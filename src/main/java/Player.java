@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private int playerId;
+    private String playerId;
     private final List<Card> playerCards;
 
-    public Player(int playerId) {
+    public Player(String playerId) {
         this.playerId = playerId;
         this.playerCards = new ArrayList<>();
     }
 
-    public int getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 
